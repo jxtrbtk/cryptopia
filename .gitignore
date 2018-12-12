@@ -1,4 +1,6 @@
 # Byte-compiled / optimized / DLL files
+/config.py
+data
 __pycache__/
 *.py[cod]
 *$py.class
@@ -101,4 +103,4 @@ venv.bak/
 /site
 
 # mypy
-.mypy_cache/
+#.mypy_cache/
