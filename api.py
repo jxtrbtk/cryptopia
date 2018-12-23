@@ -5,27 +5,23 @@
 
 This module is a simple wrapper to access Cryptopia public and private API. 
 Code was found initially on the Cryptopia Forum that has closed since that.
-So I can't say who was the initial author. 
+So I can't say who was the author. 
 It was written for Python 2.7, I've made the adaption to Python 3.
-Some changes made to implement the "UTF-8" compliance.
+Some change ti implement the "UTF-8" compliance.
 
-Functions : 
-    query : calls the api given method with the given parameters
-        input : 
-            method : name of the method (string)
-            reg : name of the method (List for the public API
-                  Dictionnary for the private API)
-        output :
-            json object of the API answer
+Example:
+    Integer 11_566 is encoded by the string "jIvU"
+    as a friendly depiction of a phone number or any other number
 
 Config file:
-    The API needs a key and a secret that are to be sotred in a config file
+    The API needs a key and a secret that are to be sotred in a xml config file
     -----------
-    config.py
+    config.xml
     -----------
-    API_KEY = '____________your_key____________'
-    API_SECRET = '_________________your_secret________________'
-
+    <config>
+        <API_KEY>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</API_KEY>
+        <API_SECRET>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</API_SECRET>
+    </config>
 
 """
 # #############79##############################################################
@@ -33,11 +29,12 @@ Config file:
 __author__ = "?"                       # Found on Cryptopia Forum (closed now)
 __contact__ = "bYhO-bOwA-dIcA"         #
 __date__ = "tIfY-mArI-kA"              # Mon Nov 26 16:26:55 2018
-__email__ = "yeah[4t]free.fr"          #
-__version__ = "2.0.1"                  #
+__email__ = "j.t[4t]free.fr"           #
+__version__ = "2.1.0"                  #
 #                                      #
 # ##################################79#########################################
 
+import os
 import time
 import hmac
 import urllib
@@ -47,19 +44,16 @@ import hashlib
 import base64
 import json
 from random import randint
+import xml.etree.ElementTree as etree
 
-import config
+api_file_path = os.path.realpath(__file__)
+api_folder_path = os.path.dirname(api_file_path)
+tree = etree.parse(os.path.join(api_folder_path,"config.xml"))
+root = tree.getroot()
+API_KEY = root.findall("API_KEY")[0].text
+API_SECRET = root.findall("API_SECRET")[0].text
 
 def query( method, req = None ):
-    """calls the api given method with the given parameters
-
-        input : 
-            method : name of the method (string)
-            reg : name of the method (List for the public API
-                  Dictionnary for the private API)
-        output :
-            json object of the API answer
-    """
     base_url = "https://www.cryptopia.co.nz/api/" 
     url = base_url + method
     if not req:
@@ -74,7 +68,6 @@ def query( method, req = None ):
             for param in req:
                 url += '/' + str( param )
         r = requests.get( url )
-        print(url)
     elif method in private_set:
         nonce = str(int(time.time()))+str((randint(100, 999)))
         post_data = json.dumps( req );
@@ -82,14 +75,14 @@ def query( method, req = None ):
         m.update(post_data.encode("UTF-8"))
         requestContentBase64String = base64.b64encode(
                 m.digest()).decode("UTF-8")
-        signature = config.API_KEY + "POST" 
+        signature = API_KEY + "POST" 
         signature += urllib.parse.quote_plus( url ).lower() + nonce 
         signature += requestContentBase64String
         hmacsignature = base64.b64encode(
-                hmac.new(base64.b64decode( config.API_SECRET ), 
+                hmac.new(base64.b64decode( API_SECRET ), 
                         signature.encode("UTF-8"), 
                         hashlib.sha256).digest()).decode("UTF-8")
-        header_value = "amx " + config.API_KEY + ":" + hmacsignature 
+        header_value = "amx " + API_KEY + ":" + hmacsignature 
         header_value += ":" + nonce
         headers = { 'Authorization': header_value, 
                    'Content-Type':'application/json; charset=utf-8' }
@@ -101,15 +94,10 @@ def query( method, req = None ):
 # local unit tests
 
 if __name__ == "__main__":
-
-    if  hasattr(config, "API_KEY") == False:
-        print("API_KEY is missing in config")
-    if  hasattr(config, "API_SECRET") == False:
-        print("API_SECRET is missing in config")
     
-    if  config.API_KEY == "":
+    if  API_KEY == "":
         print("API_KEY is missing in config")
-    if  config.API_SECRET == "":
+    if  API_SECRET == "":
         print("API_SECRET is missing in config")
 
     print (query("GetMarket", ["XMR_BTC"]))
