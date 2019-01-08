@@ -35,7 +35,7 @@ __author__ = "?"                       # Found on Cryptopia Forum (closed now)
 __contact__ = "bYhO-bOwA-dIcA"         #
 __date__ = "tIfY-mArI-kA"              # Mon Nov 26 16:26:55 2018
 __email__ = "j.t[4t]free.fr"           #
-__version__ = "2.1.1"                  #
+__version__ = "2.2.1"                  #
 #                                      #
 # ##################################79#########################################
 
@@ -102,6 +102,8 @@ def query( method, req = None ):
         headers = { 'Authorization': header_value, 
                    'Content-Type':'application/json; charset=utf-8' }
         r = requests.post( url, data = post_data, headers = headers)
+    else:
+        return None
     response = r.json()
     return response
 
@@ -117,5 +119,6 @@ if __name__ == "__main__":
 
     print (query("GetMarket", ["XMR_BTC"]))
     print (query("GetBalance", {"Currency":"BTC"}))
+    print (query("Unknown"))
 
 # #######################################################79####################
