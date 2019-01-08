@@ -9,7 +9,7 @@ Basic wrapper for the public and private API.
 The wrapper needs the key and secret to be stored in a config.xml file.
 
 ### config.xml
-`
+```
 <config>
 
 <API_KEY>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</API_KEY>
@@ -17,15 +17,15 @@ The wrapper needs the key and secret to be stored in a config.xml file.
 <API_SECRET>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</API_SECRET>
 
 </config>
-`
+```
 
 ### query
-Contains a single method called **query** with 2 parameters
+Contains a single method called `query` with 2 parameters
 - **method** : the method of the api to be called
 - **req** : the parameters to pass to the api (as a list if the public api is called, as a dictionnary if the private api i called).
 
 ### examples 
-`
+```
 output = query("GetMarket", ["XMR_BTC"]))
 
 print(output)
@@ -37,10 +37,11 @@ output = print (query("GetBalance", {"Currency":"BTC"}))
 print(output)
 
 {'Success': True, 'Error': None, 'Data': [{'CurrencyId': 1, 'Symbol': 'BTC', 'Total': 0.0035989, 'Available': 0.0035989, 'Unconfirmed': 0.0, 'HeldForTrades': 0.0, 'PendingWithdraw': 0.0, 'Address': None, 'Status': 'OK', 'StatusMessage': None, 'BaseAddress': None}]}
-`
+```
 
 ## operation.py 
 _(... coming soon ...)_
+
 Simple implementation of the api that allows to : 
 - creates an order for a given market with a target price and a stoploss
 - execute a pipeline of orders
