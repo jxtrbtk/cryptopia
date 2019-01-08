@@ -51,6 +51,7 @@ import json
 from random import randint
 import xml.etree.ElementTree as etree
 
+# Get the API key and secret from the xml file
 api_file_path = os.path.realpath(__file__)
 api_folder_path = os.path.dirname(api_file_path)
 tree = etree.parse(os.path.join(api_folder_path,"config.xml"))
@@ -69,6 +70,7 @@ def query( method, req = None ):
     url = base_url + method
     if not req:
         req = {}
+    # list of the methods covered 
     public_set = set(["GetCurrencies", "GetTradePairs", "GetMarkets", 
                       "GetMarket", "GetMarketHistory", "GetMarketOrders" ])
     private_set = set(["GetBalance", "GetDepositAddress", "GetOpenOrders", 
@@ -80,6 +82,7 @@ def query( method, req = None ):
                 url += '/' + str( param )
         r = requests.get( url )
     elif method in private_set:
+        # preparing the headers for authorization to access the private api 
         nonce = str(int(time.time()))+str((randint(100, 999)))
         post_data = json.dumps( req );
         m = hashlib.md5()
@@ -95,6 +98,7 @@ def query( method, req = None ):
                         hashlib.sha256).digest()).decode("UTF-8")
         header_value = "amx " + API_KEY + ":" + hmacsignature 
         header_value += ":" + nonce
+        # call the api 
         headers = { 'Authorization': header_value, 
                    'Content-Type':'application/json; charset=utf-8' }
         r = requests.post( url, data = post_data, headers = headers)
