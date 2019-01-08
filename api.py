@@ -9,9 +9,14 @@ So I can't say who was the author.
 It was written for Python 2.7, I've made the adaption to Python 3.
 Some change ti implement the "UTF-8" compliance.
 
-Example:
-    Integer 11_566 is encoded by the string "jIvU"
-    as a friendly depiction of a phone number or any other number
+Methods:
+    query (method, req) : 
+        Call a method of the api with the parameters specified. 
+        Return a JSON object with the response
+        Arguments:
+            method (req): method of the public or private api
+            req (opt): list (public) or dictionnary (private) of parameters
+                       default value = None
 
 Config file:
     The API needs a key and a secret that are to be sotred in a xml config file
@@ -30,7 +35,7 @@ __author__ = "?"                       # Found on Cryptopia Forum (closed now)
 __contact__ = "bYhO-bOwA-dIcA"         #
 __date__ = "tIfY-mArI-kA"              # Mon Nov 26 16:26:55 2018
 __email__ = "j.t[4t]free.fr"           #
-__version__ = "2.1.0"                  #
+__version__ = "2.1.1"                  #
 #                                      #
 # ##################################79#########################################
 
@@ -54,6 +59,12 @@ API_KEY = root.findall("API_KEY")[0].text
 API_SECRET = root.findall("API_SECRET")[0].text
 
 def query( method, req = None ):
+    """Call a method of the api with the parameters specified. 
+    Return a JSON object with the response
+    Arguments:
+        method: method of the public or private api
+        req: list (public) or dictionnary (private) of parameters
+    """    
     base_url = "https://www.cryptopia.co.nz/api/" 
     url = base_url + method
     if not req:
