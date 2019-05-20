@@ -37,7 +37,7 @@ print(output)
             'BuyBaseVolume': 3.48430831, 'SellBaseVolume': 29025222.97086225}, 
 'Error': None}
 
-output = print (query("GetBalance", {"Currency":"BTC"}))
+output = query("GetBalance", {"Currency":"BTC"})
 
 print(output)
 {'Success': True, 
